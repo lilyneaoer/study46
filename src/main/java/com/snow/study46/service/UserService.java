@@ -15,34 +15,8 @@ public class UserService {
   @Autowired
   UserRepository userRepository;
 
-  // 根所id, username, password 模糊查找
-  public List<UserVo> getUser(int id, String username, String password) {
-    List<User> userList = userRepository.findByIdAndUsernameContainingAndPasswordContaining(id, username, password);
-    List<UserVo> userVoList = new ArrayList<UserVo>();
-    userList.forEach((User user) -> {
-      UserVo userVo = new UserVo();
-      userVo.setId(user.getId());
-      userVo.setUsername(user.getUsername());
-      userVoList.add(userVo);
-    });
-    return userVoList;
-  }
-
-  // 根所id, username, password 模糊查找
-  public List<UserVo> searchUser(int id, String username, String password) {
-    List<User> userList = userRepository.searchUser(id, username, password);
-    List<UserVo> userVoList = new ArrayList<UserVo>();
-    userList.forEach((User user) -> {
-      UserVo userVo = new UserVo();
-      userVo.setId(user.getId());
-      userVo.setUsername(user.getUsername());
-      userVoList.add(userVo);
-    });
-    return userVoList;
-  }
-
   public UserVo getUserById(int id) {
-    User user = userRepository.findById(id);
+    User user = userRepository.searchId(id);
     UserVo userVo = new UserVo();
     // 也可写为统一返回数组
     if (user != null) {
@@ -56,7 +30,7 @@ public class UserService {
   }
 
   public List<UserVo> getUserByUsername(String username) {
-    List<User> userList = userRepository.findByUsernameContaining(username);
+    List<User> userList = userRepository.searchUsername(username);
     List<UserVo> userVoList = new ArrayList<UserVo>();
     userList.forEach((User user) -> {
       UserVo userVo = new UserVo();
@@ -66,4 +40,18 @@ public class UserService {
     });
     return userVoList;
   }
+
+  // 根所id, username, password 模糊查找
+  public List<UserVo> getUser(int id, String username, String password) {
+    List<User> userList = userRepository.searchUser(id, username, password);
+    List<UserVo> userVoList = new ArrayList<UserVo>();
+    userList.forEach((User user) -> {
+      UserVo userVo = new UserVo();
+      userVo.setId(user.getId());
+      userVo.setUsername(user.getUsername());
+      userVoList.add(userVo);
+    });
+    return userVoList;
+  }
+
 }

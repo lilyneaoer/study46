@@ -10,3 +10,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 server:
   port: 3000
+logging:
+  level:
+    "[com.snow.study46.repository]": DEBUG

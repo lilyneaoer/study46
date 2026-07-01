@@ -27,14 +27,6 @@ public class UserController {
     return BaseVo.success(url, userVoList);
   }
 
-  // 自定义SQL查询
-  @GetMapping("/searchUser")
-  public BaseVo<List<UserVo>> searchUser(int id, String username, String password) {
-    List<UserVo> userVoList = userService.searchUser(id, username, password);
-    String url = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-    return BaseVo.success(url, userVoList);
-  }
-
   @GetMapping("/getUserById")
   public BaseVo<UserVo> getUserById(@RequestParam int id) {
     UserVo userVo = userService.getUserById(id);
