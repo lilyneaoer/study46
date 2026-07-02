@@ -2,6 +2,7 @@ package com.snow.study46.repository;
 
 import java.util.Optional;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,8 @@ public interface UserRepository {
   // 更新密码
   @Update("update user set password=#{password} where id=#{id}")
   public int updateUserPassword(String id, String password);
+
+  // 删除用户
+  @Delete("delete from user where id=#{id}")
+  public int removeUserById(String id);
 }

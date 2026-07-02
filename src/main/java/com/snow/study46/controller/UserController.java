@@ -34,4 +34,14 @@ public class UserController {
   public BaseVo<Object> modifyPassword(@RequestBody ModifyPasswordDTO form) {
     return userService.modifyUserPassword(form);
   }
+
+  @PostMapping("/remove")
+  public BaseVo<Object> remove(@RequestBody RegisterDTO form) {
+    return userService.removeUser(form);
+  }
+  
+  @PostMapping("/removeUser")
+  public BaseVo<Object> removeUser(@RequestBody UserIdDTO id) {
+    return userService.removeUserById(id);
+  }
 }
