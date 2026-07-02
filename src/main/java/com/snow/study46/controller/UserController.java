@@ -2,17 +2,17 @@ package com.snow.study46.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.snow.study46.model.vo.BaseVo;
-import com.snow.study46.model.vo.UserVo;
+import com.snow.study46.model.dto.*;
+import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/user")
@@ -20,25 +20,18 @@ public class UserController {
   @Autowired
   UserService userService;
 
-  @GetMapping("/getUser")
-  public BaseVo<List<UserVo>> getUser(int id, String username, String password) {
-    List<UserVo> userVoList = userService.getUser(id, username, password);
-    String url = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-    return BaseVo.success(url, userVoList);
+  @PostMapping("/register")
+  public BaseVo<Object> registerUser(@RequestBody RegisterDTO form) {
+    return userService.registerUser(form);
   }
 
-  @GetMapping("/getUserById")
-  public BaseVo<UserVo> getUserById(@RequestParam int id) {
-    UserVo userVo = userService.getUserById(id);
-    String url = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-    return BaseVo.success(url, userVo);
+  @PostMapping("/login")
+  public BaseVo<Optional<UserVo>> login(@RequestBody RegisterDTO form) {
+    return userService.login(form);
   }
-
-  @GetMapping("/getUserByUsername")
-  public BaseVo<List<UserVo>> getUserByUsername(@RequestParam String username) {
-    List<UserVo> userVoList = userService.getUserByUsername(username);
-    String url = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-    return BaseVo.success(url, userVoList);
+  
+  @PostMapping("/modifyPassword")
+  public BaseVo<Object> modifyPassword(@RequestBody ModifyPasswordDTO form) {
+    return userService.modifyUserPassword(form);
   }
-
 }

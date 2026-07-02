@@ -1,24 +1,29 @@
 package com.snow.study46.repository;
 
-import java.util.List;
+import java.util.Optional;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.snow.study46.entity.User;
+import com.snow.study46.model.dto.RegisterDTO;
 
 @Mapper
 public interface UserRepository {
-  // SELECT * from user WHERE id=1;
-  @Select("SELECT * from user WHERE id = #{id}")
-  public User searchId(int id);
+  // 查询
+  @Select("select * from user where username = #{username}")
+  public Optional<User> searchUserByUsername(String username);
 
-  // SELECT * from user WHERE username LIKE '%word%';
-  @Select("SELECT * from user WHERE username LIKE CONCAT('%', #{username}, '%')")
-  public List<User> searchUsername(String username);
+  @Select("select * from user where id = #{id}")
+  public Optional<User> getUserById(String id);
 
-  // SELECT * from user WHERE
-  // id=1 AND username LIKE '%word%' AND password LIKE '%word%';
-  @Select("SELECT * from user WHERE id = #{id} AND username LIKE CONCAT('%', #{username}, '%') AND password LIKE CONCAT('%', #{password}, '%')")
-  public List<User> searchUser(int id, String username, String password);
+  // 插入
+  @Insert("insert into user(username, password) values(#{username}, #{password})")
+  public int insertUser(RegisterDTO form);
+
+  // 更新密码
+  @Update("update user set password=#{password} where id=#{id}")
+  public int updateUserPassword(String id, String password);
 }
