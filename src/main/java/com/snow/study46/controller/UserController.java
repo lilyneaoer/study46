@@ -3,6 +3,7 @@ package com.snow.study46.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.*;
 import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
@@ -21,7 +22,7 @@ public class UserController {
   UserService userService;
 
   @PostMapping("/register")
-  public BaseVo<Object> registerUser(@RequestBody RegisterDTO form) {
+  public BaseVo<Object> registerUser(@RequestBody User form) {
     return userService.registerUser(form);
   }
 
@@ -35,10 +36,10 @@ public class UserController {
     return userService.modifyUserPassword(form);
   }
 
-  @PostMapping("/remove")
-  public BaseVo<Object> remove(@RequestBody RegisterDTO form) {
-    return userService.removeUser(form);
-  }
+  // @PostMapping("/remove")
+  // public BaseVo<Object> remove(@RequestBody RegisterDTO form) {
+  //   return userService.removeUser(form);
+  // }
   
   @PostMapping("/removeUser")
   public BaseVo<Object> removeUser(@RequestBody UserIdDTO id) {
