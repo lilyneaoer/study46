@@ -63,7 +63,23 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
+		<!-- jwt相关依赖 start -->
+		<dependency>
+   		<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-gson</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+		<!-- jwt相关依赖 end -->
 		<!-- Spring Boot 测试启动器：包含 JUnit、Mockito 等测试框架 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

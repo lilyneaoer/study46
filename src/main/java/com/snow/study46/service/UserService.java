@@ -8,11 +8,13 @@ import com.snow.study46.model.dto.UserIdDTO;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.UserVo;
 import com.snow.study46.repository.UserRepository;
+import com.snow.study46.utils.JwtUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,9 @@ public class UserService {
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
+
+  @Autowired
+  JwtUtils jwtUtils;
 
   public List<UserVo> getUserList() {
     List<User> userList = userRepository.selectList(null);
@@ -68,6 +73,7 @@ public class UserService {
     UserVo userVo = new UserVo();
     userVo.setId(user.getId());
     userVo.setUsername(user.getUsername());
+    userVo.setToken(jwtUtils.getToken());
     return BaseVo.success(Optional.of(userVo), "登录成功");
   }
 
