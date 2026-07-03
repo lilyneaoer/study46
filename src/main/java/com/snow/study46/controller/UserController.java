@@ -8,6 +8,7 @@ import com.snow.study46.model.dto.*;
 import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,6 @@ public class UserController {
       return userService.getUserList();
   }
   
-
   @PostMapping("/register")
   public BaseVo<Object> registerUser(@RequestBody User form) {
     return userService.registerUser(form);
