@@ -40,7 +40,7 @@ public class MyInterceptor implements HandlerInterceptor {
       invalidToken(response);
       return false;
     }
-    if (jwtUtils.verifyToken()) {
+    if (jwtUtils.verifyToken(token)) {
       return true;
     }
     invalidToken(response);

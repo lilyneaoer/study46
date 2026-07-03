@@ -24,6 +24,9 @@ public class GlobalConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(myInterceptor);
+    registry.addInterceptor(myInterceptor).excludePathPatterns(
+        // 排除路径, 不进行拦截
+        "/user/login",
+        "/user/register");
   }
 }
