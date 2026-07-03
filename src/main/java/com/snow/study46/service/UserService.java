@@ -9,6 +9,7 @@ import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.UserVo;
 import com.snow.study46.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +20,11 @@ public class UserService {
 
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
+  }
+
+  public List<UserVo> getUserList() {
+    List<User> userList = userRepository.selectList(null);
+    return BaseVo.success(userList);
   }
 
   public BaseVo<Object> registerUser(User form) {

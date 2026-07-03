@@ -8,11 +8,15 @@ import com.snow.study46.model.dto.*;
 import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -20,6 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
   @Autowired
   UserService userService;
+
+  @GetMapping("/list")
+  public BaseVo<List<UserVo>> getList(@RequestParam String param) {
+      return userService.getUserList();
+  }
+  
 
   @PostMapping("/register")
   public BaseVo<Object> registerUser(@RequestBody User form) {
