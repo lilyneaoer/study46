@@ -19,9 +19,9 @@ public class MyInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     // Log.info("请求快到控制器");
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Methods", "*");
-    response.setHeader("Access-Control-Allow-Headers", "*");
+    // response.setHeader("Access-Control-Allow-Origin", "*");
+    // response.setHeader("Access-Control-Allow-Methods", "*");
+    // response.setHeader("Access-Control-Allow-Headers", "*");
     return true; // true: 通过 false: 拦截
   }
 
