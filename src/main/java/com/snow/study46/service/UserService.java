@@ -35,18 +35,6 @@ public class UserService {
     return userVoList;
   }
 
-  /* public List<UserVo> getUserByUsername(String username) {
-    List<User> userList = userRepository.searchUsername(username);
-    List<UserVo> userVoList = new ArrayList<UserVo>();
-    userList.forEach((User user) -> {
-      UserVo userVo = new UserVo();
-      userVo.setId(user.getId());
-      userVo.setUsername(user.getUsername());
-      userVoList.add(userVo);
-    });
-    return userVoList;
-  } */
-
   public BaseVo<Object> registerUser(User form) {
     String username = form.getUsername();
     QueryWrapper<User> queryWrapper = new QueryWrapper<User>();

@@ -8,6 +8,7 @@ import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.*;
 import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
+import com.snow.study46.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,4 +58,11 @@ public class UserController {
   public BaseVo<Object> removeUser(@RequestBody UserIdDTO id) {
     return userService.removeUserById(id);
   }
+
+  @GetMapping("/test")
+  public String test1() {
+    Log.info("userController");
+    return "test ok";
+  }
+  
 }
