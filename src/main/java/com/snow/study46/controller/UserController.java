@@ -10,10 +10,13 @@ import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
 import com.snow.study46.utils.Log;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.boot.jaxb.Origin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,10 +62,13 @@ public class UserController {
     return userService.removeUserById(id);
   }
 
-  @GetMapping("/test")
-  public String test1() {
+  @GetMapping("/testCROS")
+  public BaseVo<Object> test(HttpServletResponse res) {
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Methods", "*");
+    // res.setHeader("Access-Control-Allow-Headers", "*");
     Log.info("userController");
-    return "test ok";
+    return BaseVo.success("test cros ok");
   }
   
 }

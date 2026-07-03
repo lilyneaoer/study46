@@ -1,7 +1,5 @@
 package com.snow.study46.model.vo;
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import lombok.Data;
 
 @Data
@@ -15,12 +13,13 @@ public class BaseVo<T> {
     this.success = success;
     this.msg = msg;
     this.data = data;
-    System.out.println("======================response=================");
-    System.out.println("time: " + new java.util.Date());
-    System.out.println("url: " + ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-    System.out.println("success: " + success);
-    System.out.println("msg: " + msg);
-    System.out.println("data: " + data);
+    // System.out.println("======================response=================");
+    // System.out.println("time: " + new java.util.Date());
+    // System.out.println("url: " +
+    // ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+    // System.out.println("success: " + success);
+    // System.out.println("msg: " + msg);
+    // System.out.println("data: " + data);
   }
 
   public static <F> BaseVo<F> success(String msg) {

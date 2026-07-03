@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.snow.study46.utils.Log;
 
@@ -29,14 +30,20 @@ public class MyFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    Log.info("My Filter");
+    Log.info("过滤器");
     HttpServletRequest httpReq = (HttpServletRequest) request;
     String uri = httpReq.getRequestURI();
     HttpServletResponse httpRes = (HttpServletResponse) response;
+    httpRes.setCharacterEncoding("UTF-8");
+    // httpRes.setHeader("Access-Control-Allow-Origin", "*");
+    // httpRes.setHeader("Access-Control-Allow-Methods", "*");
+    // httpRes.setHeader("Access-Control-Allow-Headers", "*");
     // if (uri.equals("/user/test")) {
     // chain.doFilter(request, response); // 放行请求,否则请求无法到达后续过滤器或 Controller
     // }
-    chain.doFilter(request, response);
+    ContentCachingResponseWrapper wrapper = new ContentCachingResponseWrapper(httpRes);
+    chain.doFilter(request, wrapper);
+    wrapper.copyBodyToResponse();
   }
 
   @Override
