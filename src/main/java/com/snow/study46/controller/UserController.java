@@ -2,6 +2,7 @@ package com.snow.study46.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.*;
@@ -27,8 +28,9 @@ public class UserController {
   UserService userService;
 
   @GetMapping("/list")
-  public BaseVo<List<UserVo>> getList(@RequestParam String param) {
-      return userService.getUserList();
+  public BaseVo<List<UserVo>> getList() {
+    List<UserVo> userVoList = userService.getUserList();
+    return BaseVo.success(userVoList, "成功");
   }
   
   @PostMapping("/register")

@@ -26,6 +26,12 @@ public class UserService {
   public List<UserVo> getUserList() {
     List<User> userList = userRepository.selectList(null);
     List<UserVo> userVoList = new ArrayList<UserVo>();
+    userList.forEach((User user) -> {
+      UserVo userVo = new UserVo();
+      userVo.setId(user.getId());
+      userVo.setUsername(user.getUsername());
+      userVoList.add(userVo);
+    });
     return userVoList;
   }
 
