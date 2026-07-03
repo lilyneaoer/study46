@@ -63,12 +63,21 @@ public class UserController {
   }
 
   @GetMapping("/testCROS")
-  public BaseVo<Object> test(HttpServletResponse res) {
+  public BaseVo<Object> testCROS(HttpServletResponse res) {
     // res.setHeader("Access-Control-Allow-Origin", "*");
     // res.setHeader("Access-Control-Allow-Methods", "*");
     // res.setHeader("Access-Control-Allow-Headers", "*");
     Log.info("userController");
     return BaseVo.success("test cros ok");
+  }
+  
+  @GetMapping("/test")
+  public BaseVo<Object> test(HttpServletResponse res) {
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Methods", "*");
+    // res.setHeader("Access-Control-Allow-Headers", "*");
+    Log.info("userController");
+    return BaseVo.success("test");
   }
   
 }

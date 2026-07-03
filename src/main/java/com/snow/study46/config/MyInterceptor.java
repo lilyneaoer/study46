@@ -4,17 +4,30 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import com.snow.study46.utils.JwtUtils;
 import com.snow.study46.utils.Log;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Component
 public class MyInterceptor implements HandlerInterceptor {
+  @Autowired
+  JwtUtils jwtUtils;
+
+  private void invalidToken(HttpServletResponse response) throws Exception {
+    response.setStatus(401);
+    response.getWriter().write("未登录或token无效");
+    Log.info("401: 未登录或token无效");
+  }
+
   // 最常用
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -22,7 +35,16 @@ public class MyInterceptor implements HandlerInterceptor {
     // response.setHeader("Access-Control-Allow-Origin", "*");
     // response.setHeader("Access-Control-Allow-Methods", "*");
     // response.setHeader("Access-Control-Allow-Headers", "*");
-    return true; // true: 通过 false: 拦截
+    String token = request.getHeader("auth");
+    if (token == null || token.equals("")) {
+      invalidToken(response);
+      return false;
+    }
+    if (jwtUtils.verifyToken()) {
+      return true;
+    }
+    invalidToken(response);
+    return false; // true: 通过 false: 拦截
   }
 
   @Override
@@ -43,7 +65,6 @@ public class MyInterceptor implements HandlerInterceptor {
       fullUrl += "?" + queryString;
     }
     System.out.println("url: " + fullUrl);
-    // System.out.println("params: " + toStringMap(request.getParameterMap()));
     ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper) response;
     byte[] content = wrapper.getContentAsByteArray();
     String body = new String(content, wrapper.getCharacterEncoding());

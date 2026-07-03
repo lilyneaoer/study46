@@ -73,7 +73,7 @@ public class UserService {
     UserVo userVo = new UserVo();
     userVo.setId(user.getId());
     userVo.setUsername(user.getUsername());
-    userVo.setToken(jwtUtils.getToken());
+    userVo.setToken(jwtUtils.getToken(userVo.getId())); // 生成token
     return BaseVo.success(Optional.of(userVo), "登录成功");
   }
 
