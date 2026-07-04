@@ -8,6 +8,7 @@ import com.snow.study46.model.dto.RegisterDTO;
 
 @Mapper
 public interface UserRepository extends BaseMapper<User> {
+  // myBatis
   // // 查询
   // @Select("select * from user where username = #{username}")
   // public Optional<User> searchUserByUsername(String username);

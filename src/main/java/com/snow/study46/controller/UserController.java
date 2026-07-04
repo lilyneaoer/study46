@@ -1,3 +1,10 @@
+/*
+ * @Author: maxuehao lilyneao@foxmail.com
+ * @Date: 2026-07-03 19:48:04
+ * @LastEditors: maxuehao lilyneao@foxmail.com
+ * @LastEditTime: 2026-07-04 17:45:23
+ * @Description: 文件概要说明
+ */
 package com.snow.study46.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +38,12 @@ public class UserController {
   @Autowired
   UserService userService;
 
+  @GetMapping("/search")
+  public BaseVo<List<UserVo>> search(@RequestParam String keyword) {
+    List<UserVo> userVoList = userService.search(keyword);
+    return BaseVo.success(userVoList, "成功");
+  }
+  
   @GetMapping("/list")
   public BaseVo<List<UserVo>> getList() {
     List<UserVo> userVoList = userService.getUserList();
@@ -43,7 +56,7 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public BaseVo<Optional<UserVo>> login(@RequestBody RegisterDTO form) {
+  public BaseVo<Optional<UserVoLogin>> login(@RequestBody RegisterDTO form) {
     return userService.login(form);
   }
   

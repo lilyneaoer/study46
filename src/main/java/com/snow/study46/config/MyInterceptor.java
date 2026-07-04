@@ -1,3 +1,10 @@
+/*
+ * @Author: maxuehao lilyneao@foxmail.com
+ * @Date: 2026-07-03 21:30:00
+ * @LastEditors: maxuehao lilyneao@foxmail.com
+ * @LastEditTime: 2026-07-04 17:05:04
+ * @Description: 文件概要说明
+ */
 package com.snow.study46.config;
 
 import java.util.Arrays;
@@ -65,10 +72,11 @@ public class MyInterceptor implements HandlerInterceptor {
       fullUrl += "?" + queryString;
     }
     System.out.println("url: " + fullUrl);
-    ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper) response;
-    byte[] content = wrapper.getContentAsByteArray();
-    String body = new String(content, wrapper.getCharacterEncoding());
-    System.out.println("data: " + body);
+    // ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper)
+    // response;
+    // byte[] content = wrapper.getContentAsByteArray();
+    // String body = new String(content, wrapper.getCharacterEncoding());
+    // System.out.println("data: " + body);
     System.out.println("======================done=================");
   }
 }

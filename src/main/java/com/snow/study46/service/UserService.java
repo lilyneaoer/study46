@@ -7,6 +7,7 @@ import com.snow.study46.model.dto.RegisterDTO;
 import com.snow.study46.model.dto.UserIdDTO;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.UserVo;
+import com.snow.study46.model.vo.UserVoLogin;
 import com.snow.study46.repository.UserRepository;
 import com.snow.study46.utils.JwtUtils;
 
@@ -39,6 +40,20 @@ public class UserService {
     });
     return userVoList;
   }
+  
+  public List<UserVo> search(String keyword) {
+    QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+    queryWrapper.like("username", keyword);
+    List<User> userList = userRepository.selectList(queryWrapper);
+    List<UserVo> userVoList = new ArrayList<UserVo>();
+    userList.forEach((User user) -> {
+      UserVo userVo = new UserVo();
+      userVo.setId(user.getId());
+      userVo.setUsername(user.getUsername());
+      userVoList.add(userVo);
+    });
+    return userVoList;
+  }
 
   public BaseVo<Object> registerUser(User form) {
     String username = form.getUsername();
@@ -57,7 +72,7 @@ public class UserService {
     }
   }
 
-  public BaseVo<Optional<UserVo>> login(RegisterDTO form) {
+  public BaseVo<Optional<UserVoLogin>> login(RegisterDTO form) {
     String username = form.getUsername();
     String password = form.getPassword();
     QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
@@ -70,11 +85,11 @@ public class UserService {
     /* if (!user.getPassword().equals(form.getPassword())) {
       return BaseVo.fail(null, "登录失败, 密码错误");
     } */
-    UserVo userVo = new UserVo();
-    userVo.setId(user.getId());
-    userVo.setUsername(user.getUsername());
-    userVo.setToken(jwtUtils.createToken(userVo.getId())); // 生成token
-    return BaseVo.success(Optional.of(userVo), "登录成功");
+    UserVoLogin userVoLogin = new UserVoLogin();
+    userVoLogin.setId(user.getId());
+    userVoLogin.setUsername(user.getUsername());
+    userVoLogin.setToken(jwtUtils.createToken(userVoLogin.getId())); // 生成token
+    return BaseVo.success(Optional.of(userVoLogin), "登录成功");
   }
 
   public BaseVo<Object> modifyUserPassword(ModifyPasswordDTO form) {
@@ -109,7 +124,7 @@ public class UserService {
   }
 
   
-
+// myBatis
 /*   // 登录
   public BaseVo<Optional<UserVo>> login(RegisterDTO form) {
     Optional<User> opUser = userRepository.searchUserByUsername(form.getUsername());
