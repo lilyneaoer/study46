@@ -2,7 +2,7 @@
  * @Author: maxuehao lilyneao@foxmail.com
  * @Date: 2026-07-03 19:48:04
  * @LastEditors: maxuehao lilyneao@foxmail.com
- * @LastEditTime: 2026-07-04 17:45:23
+ * @LastEditTime: 2026-07-04 20:46:32
  * @Description: 文件概要说明
  */
 package com.snow.study46.controller;
@@ -18,6 +18,7 @@ import com.snow.study46.service.UserService;
 import com.snow.study46.utils.Log;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,8 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public BaseVo<Optional<UserVoLogin>> login(@RequestBody RegisterDTO form) {
+  public BaseVo<Optional<UserVoLogin>> login(@RequestBody RegisterDTO form, HttpSession session) {
+    // session.getAttribute("code");
     return userService.login(form);
   }
   
@@ -74,6 +76,13 @@ public class UserController {
   public BaseVo<Object> removeUser(@RequestBody UserIdDTO id) {
     return userService.removeUserById(id);
   }
+
+  @GetMapping("/getCode")
+  public String getCode(@RequestParam String param, HttpSession session) {
+    session.setAttribute("code", "abcde");
+      return "ok";
+  }
+  
 
   @GetMapping("/testCROS")
   public BaseVo<Object> testCROS(HttpServletResponse res) {
