@@ -34,6 +34,7 @@ public class MyFilter implements Filter {
     HttpServletRequest httpReq = (HttpServletRequest) request;
     HttpServletResponse httpRes = (HttpServletResponse) response;
     String uri = httpReq.getRequestURI();
+    System.out.println("======================start=================");
     Log.info("过滤器: " + uri);
     httpRes.setCharacterEncoding("UTF-8");
     // httpRes.setHeader("Access-Control-Allow-Origin", "*");

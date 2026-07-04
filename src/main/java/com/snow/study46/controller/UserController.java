@@ -67,6 +67,11 @@ public class UserController {
   public BaseVo<Optional<UserVoLogin>> login(@RequestBody RegisterDTO form, HttpSession session) {
     return userService.login(form, session);
   }
+  
+  @PostMapping("/loginDev")
+  public BaseVo<Optional<UserVoLogin>> loginDev(@RequestBody RegisterDevDTO form) {
+    return userService.loginDev(form);
+  }
 
   @PostMapping("/modifyPassword")
   public BaseVo<Object> modifyPassword(@RequestBody ModifyPasswordDTO form) {
@@ -87,6 +92,7 @@ public class UserController {
   public String getCode(HttpSession session) throws IOException {
     // 生成图片验证码
     String verifyCode = defaultKaptcha.createText();
+    Log.info("create verifyCode: " + verifyCode);
     session.setAttribute("verifyCode", verifyCode);
     BufferedImage image =  defaultKaptcha.createImage(verifyCode);
     ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();

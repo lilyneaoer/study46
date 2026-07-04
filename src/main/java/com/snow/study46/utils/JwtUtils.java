@@ -26,11 +26,10 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
   // 签名, 一定要作为static静态属性生成, 才能保证不会每个用户登录都生成新签名, 对于每个用户都是固定的
   // 法一: 第三库自动生成(重启服务会重置签名)
-  private Key sign = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+  // private Key sign = Keys.secretKeyFor(SignatureAlgorithm.HS256);
   // 法二: 最少32位的固定字符串生成, 重启之后不会生成新签名
-  // public static String signStr = "Xy9Qw4Rt2Pz7Mn3Bv6Lk8Jc1Fs5Gh0Ae";
-  // private static Key sign =
-  // Keys.hmacShaKeyFor(signStr.getBytes(StandardCharsets.UTF_8));
+  public static String signStr = "Xy9Qw4Rt2Pz7Mn3Bv6Lk8Jc1Fs5Gh0Ae";
+  private static Key sign = Keys.hmacShaKeyFor(signStr.getBytes(StandardCharsets.UTF_8));
 
   // 生成token
   public String createToken(String id) {

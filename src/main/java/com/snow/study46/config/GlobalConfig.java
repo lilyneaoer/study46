@@ -34,10 +34,10 @@ public class GlobalConfig implements WebMvcConfigurer {
     registry.addInterceptor(myInterceptor).excludePathPatterns(
         // 排除路径, 不进行拦截
         "/user/login",
-        "/user/register",
+        "/user/loginDev",
+            "/user/register",
         "/user/getCode",
         "/user/test*",
-        "/test/*"
-        );
+        "/test/*");
   }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.ModifyPasswordDTO;
 import com.snow.study46.model.dto.RegisterDTO;
+import com.snow.study46.model.dto.RegisterDevDTO;
 import com.snow.study46.model.dto.UserIdDTO;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.UserVo;
@@ -76,9 +77,9 @@ public class UserService {
   }
 
   public BaseVo<Optional<UserVoLogin>> login(RegisterDTO form, HttpSession session) {
-    Log.info("verifyCode: " + session.getAttribute("verifyCode"));
-    System.out.println("session.getAttribute(\"verifyCode\")" + session.getAttribute("verifyCode"));
-    if (form.getVerifyCode().equals(session.getAttribute("verifyCode"))) {
+    String verifyCode = (String) session.getAttribute("verifyCode");
+    Log.info("userService_login_verifyCode: " + verifyCode);
+    if (form.getVerifyCode().equals(verifyCode)) {
       String username = form.getUsername();
       String password = form.getPassword();
       QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
@@ -102,6 +103,29 @@ public class UserService {
       return BaseVo.fail("验证码输入错误");
     }
 
+  }
+  
+  public BaseVo<Optional<UserVoLogin>> loginDev(RegisterDevDTO form) {
+    Log.info("devLogin");
+    String username = form.getUsername();
+    String password = form.getPassword();
+    QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+    queryWrapper.eq("username", username).eq("password", password); // 链式调用, where username=xxxx and password=xxxx
+    User user = userRepository.selectOne(queryWrapper);
+    if (user == null) {
+      // return BaseVo.fail(null, "登录失败, 用户不存在");
+      return BaseVo.fail(null, "登录失败, 用户名或密码错误");
+    }
+    /*
+     * if (!user.getPassword().equals(form.getPassword())) {
+     * return BaseVo.fail(null, "登录失败, 密码错误");
+     * }
+     */
+    UserVoLogin userVoLogin = new UserVoLogin();
+    userVoLogin.setId(user.getId());
+    userVoLogin.setUsername(user.getUsername());
+    userVoLogin.setToken(jwtUtils.createToken(userVoLogin.getId())); // 生成token
+    return BaseVo.success(Optional.of(userVoLogin), "登录成功");
   }
 
   public BaseVo<Object> modifyUserPassword(ModifyPasswordDTO form) {

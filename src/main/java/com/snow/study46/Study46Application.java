@@ -17,7 +17,7 @@ public class Study46Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Study46Application.class, args);
-		System.out.println("=================start================");
+		System.out.println("=================Spring Boot Start================");
 	}
 
 }
