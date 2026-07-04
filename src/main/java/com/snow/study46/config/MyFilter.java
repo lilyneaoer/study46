@@ -29,11 +29,12 @@ public class MyFilter implements Filter {
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-      throws IOException, ServletException {
-    Log.info("过滤器");
+      throws IOException, ServletException 
+  {
     HttpServletRequest httpReq = (HttpServletRequest) request;
-    String uri = httpReq.getRequestURI();
     HttpServletResponse httpRes = (HttpServletResponse) response;
+    String uri = httpReq.getRequestURI();
+    Log.info("过滤器: " + uri);
     httpRes.setCharacterEncoding("UTF-8");
     // httpRes.setHeader("Access-Control-Allow-Origin", "*");
     // httpRes.setHeader("Access-Control-Allow-Methods", "*");

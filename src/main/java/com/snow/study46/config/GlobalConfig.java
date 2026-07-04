@@ -12,10 +12,17 @@ public class GlobalConfig implements WebMvcConfigurer {
   // 跨域设置
   @Override
   public void addCorsMappings(@NonNull CorsRegistry registry) {
+    // 一般情况
+    // registry.addMapping("/**")
+    // .allowedOrigins("*")
+    // .allowedMethods("*")
+    // .allowedHeaders("*");
+
+    // 允许请求携带cookie
     registry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("*")
-        .allowedHeaders("*");
+        .allowCredentials(true)
+        .allowedOrigins("http://localhost:5173")
+        .allowedMethods("*");
   }
 
   // 注册拦截器
@@ -27,7 +34,10 @@ public class GlobalConfig implements WebMvcConfigurer {
     registry.addInterceptor(myInterceptor).excludePathPatterns(
         // 排除路径, 不进行拦截
         "/user/login",
+        "/user/register",
         "/user/getCode",
-            "/user/register");
+        "/user/test*",
+        "/test/*"
+        );
   }
 }

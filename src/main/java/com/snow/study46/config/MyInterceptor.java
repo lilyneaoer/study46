@@ -72,11 +72,10 @@ public class MyInterceptor implements HandlerInterceptor {
       fullUrl += "?" + queryString;
     }
     System.out.println("url: " + fullUrl);
-    // ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper)
-    // response;
-    // byte[] content = wrapper.getContentAsByteArray();
-    // String body = new String(content, wrapper.getCharacterEncoding());
-    // System.out.println("data: " + body);
+    ContentCachingResponseWrapper wrapper = (ContentCachingResponseWrapper) response;
+    byte[] content = wrapper.getContentAsByteArray();
+    String body = new String(content, wrapper.getCharacterEncoding());
+    System.out.println("data: " + body);
     System.out.println("======================done=================");
   }
 }
