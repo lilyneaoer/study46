@@ -7,13 +7,22 @@
  */
 package com.snow.study46.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.snow.study46.entity.User;
+import com.snow.study46.model.dto.UserListDTO;
 
 @Mapper
 public interface UserRepository extends BaseMapper<User> {
+  @Select("select * from user where id like concat('%', #{userListDTO.id}, '%') and username like concat('%', #{userListDTO.username}, '%') and createTime > #{userListDTO.startTime} and createTime < #{userListDTO.endTime}")
+  public List<User> getUserList(UserListDTO userListDTO, int offset);
+
+  @Select("select count(*) from user")
+  public int getCountUser();
   // myBatis
   // // 查询
   // @Select("select * from user where username = #{username}")

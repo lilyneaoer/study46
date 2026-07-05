@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -52,9 +53,16 @@ public class UserController {
     return BaseVo.success(userVoList, "成功");
   }
 
+  // 分页查询 
   @GetMapping("/list")
-  public BaseVo<List<UserVo>> getList() {
-    List<UserVo> userVoList = userService.getUserList();
+  public BaseVo<PageVo<User>> getList(@ModelAttribute UserListDTO userListDTO ) {
+    return userService.getList(userListDTO);
+  }
+  
+  // 所有用户
+  @GetMapping("/listAll")
+  public BaseVo<List<UserVo>> getListAll() {
+    List<UserVo> userVoList = userService.getListAll();
     return BaseVo.success(userVoList, "成功");
   }
 

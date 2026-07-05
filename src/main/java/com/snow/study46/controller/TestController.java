@@ -37,8 +37,8 @@ public class TestController {
     return BaseVo.success("test");
   }
 
-  @GetMapping("/base64")
-  public String testBase64(@RequestParam String str) {
+  @PostMapping("/base64")
+  public String testBase64(@RequestBody String str) {
     String baseStr = Base64.getEncoder().encodeToString(str.getBytes());
     return baseStr;
   }

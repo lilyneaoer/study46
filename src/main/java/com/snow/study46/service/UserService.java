@@ -6,7 +6,9 @@ import com.snow.study46.model.dto.ModifyPasswordDTO;
 import com.snow.study46.model.dto.RegisterDTO;
 import com.snow.study46.model.dto.RegisterDevDTO;
 import com.snow.study46.model.dto.UserIdDTO;
+import com.snow.study46.model.dto.UserListDTO;
 import com.snow.study46.model.vo.BaseVo;
+import com.snow.study46.model.vo.PageVo;
 import com.snow.study46.model.vo.UserVo;
 import com.snow.study46.model.vo.UserVoLogin;
 import com.snow.study46.repository.UserRepository;
@@ -33,7 +35,20 @@ public class UserService {
   @Autowired
   JwtUtils jwtUtils;
 
-  public List<UserVo> getUserList() {
+  // 分页查询
+  public BaseVo<PageVo<User>> getList(UserListDTO userListDTO) {
+    int pageNum = userListDTO.getPageNum();
+    int pageSize = userListDTO.getPageSize();
+    int offset = (pageNum - 1) * pageSize;
+    int total = userRepository.getCountUser();
+    boolean hasMore = pageNum * pageSize > total;
+    List<User> userList = userRepository.getUserList(userListDTO, offset);
+    return BaseVo.success(PageVo.getPageVo(total, userList, pageNum, pageSize, hasMore));
+    // return BaseVo.success(PageVo.getPageVo());
+  }
+
+  // 查询所有用户
+  public List<UserVo> getListAll() {
     List<User> userList = userRepository.selectList(null);
     List<UserVo> userVoList = new ArrayList<UserVo>();
     userList.forEach((User user) -> {
