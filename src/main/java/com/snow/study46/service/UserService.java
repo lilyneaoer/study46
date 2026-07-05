@@ -36,27 +36,40 @@ public class UserService {
   JwtUtils jwtUtils;
 
   // 分页查询
-  public BaseVo<PageVo<User>> getList(UserListDTO userListDTO) {
+  public BaseVo<PageVo<UserVo>> getList(UserListDTO userListDTO) {
     int pageNum = userListDTO.getPageNum();
     int pageSize = userListDTO.getPageSize();
     int offset = (pageNum - 1) * pageSize;
     int total = userRepository.getCountUser();
     boolean hasMore = pageNum * pageSize < total;
     List<User> userList = userRepository.getUserList(userListDTO, offset);
-    return BaseVo.success(PageVo.getPageVo(total, userList, pageNum, pageSize, hasMore), "查询成功");
+    List<UserVo> userVoList = new ArrayList<UserVo>();
+    userList.forEach((User user) -> {
+      UserVo userVo = new UserVo();
+      userVo.setId(user.getId());
+      userVo.setUsername(user.getUsername());
+      userVo.setCreateTime(user.getCreateTime());
+      userVo.setUpdateTime(user.getUpdateTime());
+      userVoList.add(userVo);
+    });
+    // int total = userVoList.size();
+    Log.info("length: " + userVoList.size());
+    return BaseVo.success(PageVo.getPageVo(total, userVoList, pageNum, pageSize, hasMore), "查询成功");
   }
 
   // 查询所有用户
-  public List<UserVo> getListAll() {
+  public BaseVo<List<UserVo>> getListAll() {
     List<User> userList = userRepository.selectList(null);
     List<UserVo> userVoList = new ArrayList<UserVo>();
     userList.forEach((User user) -> {
       UserVo userVo = new UserVo();
       userVo.setId(user.getId());
       userVo.setUsername(user.getUsername());
+      userVo.setCreateTime(user.getCreateTime());
+      userVo.setUpdateTime(user.getUpdateTime());
       userVoList.add(userVo);
     });
-    return userVoList;
+    return BaseVo.success(userVoList, "查询所有用户成功");
   }
 
   public List<UserVo> search(String keyword) {

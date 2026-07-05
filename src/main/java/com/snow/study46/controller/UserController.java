@@ -55,15 +55,14 @@ public class UserController {
 
   // 分页查询 
   @GetMapping("/list")
-  public BaseVo<PageVo<User>> getList(@ModelAttribute UserListDTO userListDTO ) {
+  public BaseVo<PageVo<UserVo>> getList(@ModelAttribute UserListDTO userListDTO ) {
     return userService.getList(userListDTO);
   }
   
   // 所有用户
   @GetMapping("/listAll")
   public BaseVo<List<UserVo>> getListAll() {
-    List<UserVo> userVoList = userService.getListAll();
-    return BaseVo.success(userVoList, "成功");
+    return userService.getListAll();
   }
 
   @PostMapping("/register")
