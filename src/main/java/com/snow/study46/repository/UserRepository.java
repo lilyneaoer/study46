@@ -18,7 +18,31 @@ import com.snow.study46.model.dto.UserListDTO;
 
 @Mapper
 public interface UserRepository extends BaseMapper<User> {
-  @Select("select * from user where id like concat('%', #{userListDTO.id}, '%') and username like concat('%', #{userListDTO.username}, '%') and createTime > #{userListDTO.startTime} and createTime < #{userListDTO.endTime}")
+  // @Select("<script>"
+  // + "select * from user"
+  // + " <where>"
+  // + " <if test='userListDTO.id != null and userListDTO.id != \"\"'>"
+  // + " and id like concat('%', #{userListDTO.id}, '%')"
+  // + " </if>"
+  // + " <if test='userListDTO.username != null and userListDTO.username !=
+  // \"\"'>"
+  // + " and username like concat('%', #{userListDTO.username}, '%')"
+  // + " </if>"
+  // + " <if test='userListDTO.startTime != null and userListDTO.startTime !=
+  // \"\"'>"
+  // + " and create_time &gt; #{userListDTO.startTime}"
+  // + " </if>"
+  // + " <if test='userListDTO.endTime != null and userListDTO.endTime != \"\"'>"
+  // + " and create_time &lt; #{userListDTO.endTime}"
+  // + " </if>"
+  // + " </where>"
+  // + " limit #{offset}, #{userListDTO.pageSize}"
+  // + "</script>")
+  // @Select("select * from user where id like concat('%',#{userListDTO.id},'%')
+  // and username like concat('%',#{userListDTO.username},'%') and create_time >
+  // #{userListDTO.startTime} and create_time<#{userListDTO.endTime} limit
+  // #{userListDTO.pageSize} offset #{offset}")
+  @Select("select * from user where id like concat('%', #{userListDTO.id}, '%') and username like concat('%', #{userListDTO.username}, '%') and create_time > #{userListDTO.startTime} and create_time < #{userListDTO.endTime} limit #{userListDTO.pageSize} offset #{offset}")
   public List<User> getUserList(UserListDTO userListDTO, int offset);
 
   @Select("select count(*) from user")

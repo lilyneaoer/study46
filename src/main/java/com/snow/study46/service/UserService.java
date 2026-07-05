@@ -41,10 +41,9 @@ public class UserService {
     int pageSize = userListDTO.getPageSize();
     int offset = (pageNum - 1) * pageSize;
     int total = userRepository.getCountUser();
-    boolean hasMore = pageNum * pageSize > total;
+    boolean hasMore = pageNum * pageSize < total;
     List<User> userList = userRepository.getUserList(userListDTO, offset);
-    return BaseVo.success(PageVo.getPageVo(total, userList, pageNum, pageSize, hasMore));
-    // return BaseVo.success(PageVo.getPageVo());
+    return BaseVo.success(PageVo.getPageVo(total, userList, pageNum, pageSize, hasMore), "查询成功");
   }
 
   // 查询所有用户
