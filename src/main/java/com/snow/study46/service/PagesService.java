@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.model.entity.Module;
 import com.snow.study46.model.entity.Page;
 import com.snow.study46.model.vo.BaseVo;
@@ -28,26 +29,27 @@ public class PagesService {
 
   // @SuppressWarnings("null")
   public BaseVo<List<ModulesVo>> getListTree() {
-    List<Module> modulesList = modulesRepository.selectList(null);
-    List<ModulesVo> resultList = modulesList.stream().map((modules) -> {
+    List<Module> moduleList = modulesRepository.selectList(null);
+    List<ModulesVo> resultList = moduleList.stream().map((module) -> {
       ModulesVo modulesVo = new ModulesVo();
-      modulesVo.setModuleId(modules.getModuleId());
-      modulesVo.setModuleName(modules.getModuleName());
+      modulesVo.setModuleId(module.getModuleId());
+      modulesVo.setModuleName(module.getModuleName());
+      // QueryWrapper<Page> pagQueryWrapper = new QueryWrapper<Page>();
+      // pagQueryWrapper.eq("module_id", module.getModuleId()).isNull("parent_id");
       LambdaQueryWrapper<Page> queryWrapper = new LambdaQueryWrapper<>();
-      // queryWrapper.eq(p -> p.getModuleId(), modules.getModuleId()).isNull(p ->
+      // queryWrapper.eq(p -> p.getModuleId(), module.getModuleId()).isNull(p ->
       // p.getParentId());
-      queryWrapper.eq(Page::getModuleId, modules.getModuleId()).isNull(Page::getParentId);
-      List<Page> listPages = pagesRepository.selectList(queryWrapper);
-      Log.info("listPages" + listPages);
-      modulesVo.setPage(getPage(listPages));
+      queryWrapper.eq(Page::getModuleId, module.getModuleId()).isNull(Page::getParentId);
+      List<Page> listPage = pagesRepository.selectList(queryWrapper);
+      modulesVo.setPage(getPage(listPage));
       return modulesVo;
     }).collect(Collectors.toList());
     return BaseVo.success(resultList, "查询成功");
   }
 
-  public List<PageDetailVo> getPage(List<Page> pageList) {
+  public List<PageDetailVo> getPage(List<Page> listPage) {
     List<PageDetailVo> pageDetailVoList = new ArrayList<>();
-    pageDetailVoList = pageList.stream().map((pageItem) -> {
+    pageDetailVoList = listPage.stream().map((pageItem) -> {
       PageDetailVo pageDetailVo = new PageDetailVo();
       pageDetailVo.setPageId(pageItem.getPageId());
       pageDetailVo.setPageName(pageItem.getPageName());
@@ -56,7 +58,11 @@ public class PagesService {
       LambdaQueryWrapper<Page> queryWrapper = new LambdaQueryWrapper<>();
       queryWrapper.eq(Page::getParentId, pageItem.getPageId());
       List<Page> childPages = pagesRepository.selectList(queryWrapper);
-      pageDetailVo.setChildren(getPage(childPages));
+      if (childPages.size() != 0) {
+        pageDetailVo.setChildren(getPage(childPages));
+      } else {
+        pageDetailVo.setChildren(new ArrayList<PageDetailVo>());
+      }
       return pageDetailVo;
     }).collect(Collectors.toList());
     return pageDetailVoList;
