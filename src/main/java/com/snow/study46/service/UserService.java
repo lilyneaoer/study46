@@ -1,5 +1,6 @@
 package com.snow.study46.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.ModifyPasswordDTO;
@@ -72,9 +73,12 @@ public class UserService {
     return BaseVo.success(userVoList, "查询所有用户成功");
   }
 
+  @SuppressWarnings("null")
   public List<UserVo> search(String keyword) {
-    QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
-    queryWrapper.like("username", keyword);
+    // QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+    // queryWrapper.like("username", keyword);
+    LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.like(User::getUsername, keyword);
     List<User> userList = userRepository.selectList(queryWrapper);
     List<UserVo> userVoList = new ArrayList<UserVo>();
     userList.forEach((User user) -> {
@@ -86,11 +90,12 @@ public class UserService {
     return userVoList;
   }
 
+  @SuppressWarnings("null")
   public BaseVo<Object> registerUser(User form) {
     String username = form.getUsername();
     QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
-    // queryWrapper.like("username", username);
-    queryWrapper.eq("username", username);
+    LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(User::getUsername, username);
     User user = userRepository.selectOne(queryWrapper);
     if (user == null) {
       int result = userRepository.insert(form);
@@ -137,7 +142,9 @@ public class UserService {
     String username = form.getUsername();
     String password = form.getPassword();
     QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
-    queryWrapper.eq("username", username).eq("password", password); // 链式调用, where username=xxxx and password=xxxx
+    // 链式调用, where username=xxxx and password=xxxx
+    queryWrapper.eq("username", username).eq("password", password);
+    // queryWrapper.eq(User::getUsername, username).eq(User::password, password);
     User user = userRepository.selectOne(queryWrapper);
     if (user == null) {
       // return BaseVo.fail(null, "登录失败, 用户不存在");
