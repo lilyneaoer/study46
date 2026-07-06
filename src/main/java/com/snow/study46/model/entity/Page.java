@@ -7,9 +7,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("modules")
-public class Modules {
+@TableName("page")
+public class Page {
   @TableId(type = IdType.AUTO)
+  private int pageId;
+  private String pageName;
+  private String pagePath;
+  private int parentId;
   private int moduleId;
-  private String moduleName;
 }

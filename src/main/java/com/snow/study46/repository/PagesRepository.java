@@ -3,9 +3,9 @@ package com.snow.study46.repository;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.snow.study46.model.entity.Pages;
+import com.snow.study46.model.entity.Page;
 
 @Mapper
-public interface PagesRepository extends BaseMapper<Pages> {
+public interface PagesRepository extends BaseMapper<Page> {
 
 }
