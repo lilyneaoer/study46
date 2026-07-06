@@ -22,7 +22,7 @@
   </sql>
 
   <!-- 分页查询用户列表 -->
-  <select id="getUserList" resultType="com.snow.study46.entity.User">
+  <select id="getUserList" resultType="com.snow.study46.model.entity.User">
     select * from user
     <include refid="userListCondition"/>
     limit #{userListDTO.pageSize} offset #{offset}

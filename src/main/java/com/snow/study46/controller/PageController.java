@@ -1,11 +1,12 @@
 package com.snow.study46.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.ModulesVo;
-import com.snow.study46.model.vo.PageDetailVo;
 import com.snow.study46.service.PagesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,7 @@ public class PageController {
   PagesService pagesService;
 
   @GetMapping("/list")
-  // public BaseVo<ModulesVo<PageDetailVo>> getList() {
-  public BaseVo<Object> getList() {
+  public BaseVo<List<ModulesVo>> getList() {
     return pagesService.getList();
   }
 

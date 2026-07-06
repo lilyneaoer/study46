@@ -43,7 +43,7 @@ public class JwtUtils {
         // sub Subject 主题，通常代表令牌所针对的用户或实体
         .setSubject(id) // 唯一标识
         // exp Expiration Time 过期时间，一个时间戳，在此时间之后令牌无效, 这里为24个小时
-        .setExpiration(new Date(System.currentTimeMillis() + 24 * 3600 * 100))
+        .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
         .signWith(sign) // 签名
         .compact(); // 结束, 生成token
     return token;

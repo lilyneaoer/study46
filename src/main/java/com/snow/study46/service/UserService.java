@@ -10,6 +10,7 @@ import com.snow.study46.model.dto.UserIdDTO;
 import com.snow.study46.model.dto.UserListDTO;
 import com.snow.study46.model.entity.User;
 import com.snow.study46.model.vo.BaseVo;
+import com.snow.study46.model.vo.PageDetailVo;
 import com.snow.study46.model.vo.PageListVo;
 import com.snow.study46.model.vo.UserVo;
 import com.snow.study46.model.vo.UserVoLogin;
@@ -63,6 +64,7 @@ public class UserService {
   public BaseVo<List<UserVo>> getListAll() {
     List<User> userList = userRepository.selectList(null);
     List<UserVo> userVoList = new ArrayList<UserVo>();
+   
     userList.forEach((User user) -> {
       UserVo userVo = new UserVo();
       userVo.setId(user.getId());
