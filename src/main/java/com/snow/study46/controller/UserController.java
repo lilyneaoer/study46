@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.*;
+import com.snow.study46.model.entity.User;
 import com.snow.study46.model.vo.*;
 import com.snow.study46.service.UserService;
 import com.snow.study46.utils.Log;
@@ -55,7 +55,7 @@ public class UserController {
 
   // 分页查询 
   @GetMapping("/list")
-  public BaseVo<PageVo<UserVo>> getList(@ModelAttribute UserListDTO userListDTO ) {
+  public BaseVo<PageListVo<UserVo>> getList(@ModelAttribute UserListDTO userListDTO ) {
     return userService.getList(userListDTO);
   }
   

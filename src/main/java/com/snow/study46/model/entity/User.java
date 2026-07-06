@@ -1,4 +1,4 @@
-package com.snow.study46.entity;
+package com.snow.study46.model.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

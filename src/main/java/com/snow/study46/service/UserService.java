@@ -2,15 +2,15 @@ package com.snow.study46.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.LoginDTO;
 import com.snow.study46.model.dto.ModifyPasswordDTO;
 import com.snow.study46.model.dto.RegisterDTO;
 import com.snow.study46.model.dto.RegisterDevDTO;
 import com.snow.study46.model.dto.UserIdDTO;
 import com.snow.study46.model.dto.UserListDTO;
+import com.snow.study46.model.entity.User;
 import com.snow.study46.model.vo.BaseVo;
-import com.snow.study46.model.vo.PageVo;
+import com.snow.study46.model.vo.PageListVo;
 import com.snow.study46.model.vo.UserVo;
 import com.snow.study46.model.vo.UserVoLogin;
 import com.snow.study46.repository.UserRepository;
@@ -38,7 +38,7 @@ public class UserService {
   JwtUtils jwtUtils;
 
   // 分页查询
-  public BaseVo<PageVo<UserVo>> getList(UserListDTO userListDTO) {
+  public BaseVo<PageListVo<UserVo>> getList(UserListDTO userListDTO) {
     int pageNum = userListDTO.getPageNum();
     int pageSize = userListDTO.getPageSize();
     int offset = (pageNum - 1) * pageSize;
@@ -56,7 +56,7 @@ public class UserService {
     });
     // int total = userVoList.size();
     Log.info("length: " + userVoList.size());
-    return BaseVo.success(PageVo.getPageVo(total, userVoList, pageNum, pageSize, hasMore), "查询成功");
+    return BaseVo.success(PageListVo.getPageVo(total, userVoList, pageNum, pageSize, hasMore), "查询成功");
   }
 
   // 查询所有用户

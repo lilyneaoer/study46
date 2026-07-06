@@ -7,8 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.UserListDTO;
+import com.snow.study46.model.entity.User;
 
 @Mapper
 public interface UserRepository extends BaseMapper<User> {

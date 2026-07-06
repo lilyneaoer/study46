@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.snow.study46.entity.User;
 import com.snow.study46.model.dto.RegisterDTO;
+import com.snow.study46.model.entity.User;
 
 @Mapper
 public interface UserRepositoryBackup {
