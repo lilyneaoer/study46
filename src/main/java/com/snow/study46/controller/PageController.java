@@ -21,7 +21,7 @@ public class PageController {
 
   @GetMapping("/list")
   public BaseVo<List<ModulesVo>> getList() {
-    return pagesService.getList();
+    return pagesService.getListTree();
   }
 
 }

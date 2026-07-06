@@ -27,7 +27,7 @@ public class PagesService {
   }
 
   // @SuppressWarnings("null")
-  public BaseVo<List<ModulesVo>> getList() {
+  public BaseVo<List<ModulesVo>> getListTree() {
     List<Modules> modulesList = modulesRepository.selectList(null);
     List<ModulesVo> resultList = modulesList.stream().map((modules) -> {
       ModulesVo modulesVo = new ModulesVo();
