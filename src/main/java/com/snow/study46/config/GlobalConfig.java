@@ -35,7 +35,7 @@ public class GlobalConfig implements WebMvcConfigurer {
         // 排除路径, 不进行拦截
         "/user/login",
         "/user/loginDev",
-            "/user/register",
+                "/user/register",
         "/user/getCode",
         "/user/test*",
         "/test/*");

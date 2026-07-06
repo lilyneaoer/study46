@@ -66,12 +66,12 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public BaseVo<Object> registerUser(@RequestBody User form) {
+  public BaseVo<Object> registerUser(@RequestBody RegisterDTO form) {
     return userService.registerUser(form);
   }
 
   @PostMapping("/login")
-  public BaseVo<Optional<UserVoLogin>> login(@RequestBody RegisterDTO form, HttpSession session) {
+  public BaseVo<Optional<UserVoLogin>> login(@RequestBody LoginDTO form, HttpSession session) {
     return userService.login(form, session);
   }
   

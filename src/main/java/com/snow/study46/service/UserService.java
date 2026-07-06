@@ -3,6 +3,7 @@ package com.snow.study46.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.entity.User;
+import com.snow.study46.model.dto.LoginDTO;
 import com.snow.study46.model.dto.ModifyPasswordDTO;
 import com.snow.study46.model.dto.RegisterDTO;
 import com.snow.study46.model.dto.RegisterDevDTO;
@@ -91,14 +92,16 @@ public class UserService {
   }
 
   @SuppressWarnings("null")
-  public BaseVo<Object> registerUser(User form) {
+  public BaseVo<Object> registerUser(RegisterDTO form) {
     String username = form.getUsername();
-    QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
     LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
     wrapper.eq(User::getUsername, username);
-    User user = userRepository.selectOne(queryWrapper);
+    User user = userRepository.selectOne(wrapper);
     if (user == null) {
-      int result = userRepository.insert(form);
+      User newUser = new User();
+      newUser.setUsername(form.getUsername());
+      newUser.setPassword(form.getPassword());
+      int result = userRepository.insert(newUser);
       if (result == 1) {
         return BaseVo.success("注册成功");
       }
@@ -108,7 +111,7 @@ public class UserService {
     }
   }
 
-  public BaseVo<Optional<UserVoLogin>> login(RegisterDTO form, HttpSession session) {
+  public BaseVo<Optional<UserVoLogin>> login(LoginDTO form, HttpSession session) {
     String verifyCode = (String) session.getAttribute("verifyCode");
     Log.info("userService_login_verifyCode: " + verifyCode);
     if (form.getVerifyCode().equals(verifyCode)) {
