@@ -40,7 +40,7 @@ public class UserService {
     int pageNum = userListDTO.getPageNum();
     int pageSize = userListDTO.getPageSize();
     int offset = (pageNum - 1) * pageSize;
-    int total = userRepository.getCountUser();
+    int total = userRepository.getCountUser(userListDTO);
     boolean hasMore = pageNum * pageSize < total;
     List<User> userList = userRepository.getUserList(userListDTO, offset);
     List<UserVo> userVoList = new ArrayList<UserVo>();
