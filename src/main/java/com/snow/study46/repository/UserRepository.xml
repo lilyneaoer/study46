@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 指定仓库类 -->
 <mapper namespace="com.snow.study46.repository.UserRepository">
+  <!-- 方法和返回结果 -->
   <select id="getUserList" resultType="com.snow.study46.entity.User">
     select * from user
     <where>
