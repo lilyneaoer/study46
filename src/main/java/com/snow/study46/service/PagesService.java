@@ -1,7 +1,10 @@
 package com.snow.study46.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.ModulesVo;
 import com.snow.study46.model.vo.PageDetailVo;
 import com.snow.study46.model.vo.PageInfoVo;
+import com.snow.study46.model.vo.UserModulesVo;
 import com.snow.study46.model.vo.UserPagesVo;
 import com.snow.study46.repository.ModulesRepository;
 import com.snow.study46.repository.PagesRepository;
@@ -102,14 +106,15 @@ public class PagesService {
     if (role == null) {
       return BaseVo.fail("角色不存在");
     }
-    List<RolePage> listRolePage = rolePageRepository.selectList(
-        new LambdaQueryWrapper<RolePage>().eq(RolePage::getRoleId, role.getRoleId()));
+    LambdaQueryWrapper<RolePage> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(RolePage::getRoleId, role.getRoleId());
+    List<RolePage> listRolePage = rolePageRepository.selectList(queryWrapper);
     UserPagesVo userPagesVo = new UserPagesVo();
     userPagesVo.setId(user.getId());
     userPagesVo.setUsername(user.getUsername());
     userPagesVo.setRoleId(role.getRoleId());
     userPagesVo.setRoleName(role.getRoleName());
-
+    List<UserModulesVo> listUserModulesVos = new ArrayList<>();
     if (listRolePage.size() != 0) {
       List<PageInfoVo> listPageInfo = listRolePage.stream().map((rolePageItem) -> {
         PageInfoVo pageInfoVo = new PageInfoVo();
@@ -117,14 +122,46 @@ public class PagesService {
         pageInfoVo.setPageId(page.getPageId());
         pageInfoVo.setPageName(page.getPageName());
         pageInfoVo.setPagePath(page.getPagePath());
+        pageInfoVo.setParentId(page.getParentId());
+        pageInfoVo.setModuleId(page.getModuleId());
+        Module module = modulesRepository.selectById(page.getModuleId());
+        pageInfoVo.setModuleName(module.getModuleName());
         return pageInfoVo;
       }).collect(Collectors.toList());
-      userPagesVo.setPages(listPageInfo);
-    } else {
-      userPagesVo.setPages(new ArrayList<PageInfoVo>());
+      listPageInfo = createPageTree(listPageInfo);
+      listUserModulesVos = listPageInfo.stream().map((pageInfoVoItem) -> {
+        UserModulesVo userModulesVo = new UserModulesVo();
+        userModulesVo.setModuleId(pageInfoVoItem.getModuleId());
+        userModulesVo.setModuleName(pageInfoVoItem.getModuleName());
+        userModulesVo.setPages(pageInfoVoItem.getChildren());
+        return userModulesVo;
+      }).collect(Collectors.toList());
     }
+    userPagesVo.setModules(listUserModulesVos);
     return BaseVo.success(userPagesVo, "查询成功");
 
+  }
+
+  public List<PageInfoVo> createPageTree(List<PageInfoVo> pageList) {
+    Map<Integer, PageInfoVo> pagesMap = new HashMap<>();
+    List<PageInfoVo> resultList = new ArrayList<>();
+    pageList.forEach((pageItem) -> {
+      pagesMap.put(pageItem.getPageId(), pageItem);
+    });
+    pageList.forEach((pageItem) -> {
+      if (pageItem.getParentId() == 0) {
+        resultList.add(pageItem);
+      } else {
+        PageInfoVo parent = pagesMap.get(pageItem.getParentId());
+        if (parent != null) {
+          if (parent.getChildren() == null) {
+            parent.setChildren(new ArrayList<>());
+          }
+          parent.getChildren().add(pageItem);
+        }
+      }
+    });
+    return resultList;
   }
 
   // /**

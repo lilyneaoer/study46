@@ -10,5 +10,5 @@ public class UserPagesVo {
   private String username;
   private int roleId;
   private String roleName;
-  private List<PageInfoVo> pages;
+  private List<UserModulesVo> modules;
 }
