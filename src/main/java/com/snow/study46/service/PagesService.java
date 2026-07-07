@@ -11,9 +11,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.model.entity.Module;
 import com.snow.study46.model.entity.Page;
+import com.snow.study46.model.entity.Role;
+import com.snow.study46.model.entity.RolePage;
+import com.snow.study46.model.entity.User;
+import com.snow.study46.model.entity.UserRole;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.ModulesVo;
 import com.snow.study46.model.vo.PageDetailVo;
+import com.snow.study46.model.vo.PageInfoVo;
+import com.snow.study46.model.vo.UserPagesVo;
 import com.snow.study46.repository.ModulesRepository;
 import com.snow.study46.repository.PagesRepository;
 import com.snow.study46.repository.RolePageRepository;
@@ -84,7 +90,38 @@ public class PagesService {
 
   // 通过userId查询页面
   public BaseVo<Object> getPagesByUserId(String userId) {
-    return BaseVo.success(null, "查询成功");
+    User user = userRepository.selectById(userId);
+    if (user == null) {
+      return BaseVo.fail("无此用户");
+    }
+    UserRole userRole = userRoleRepository.selectById(user.getId());
+    if (userRole == null) {
+      return BaseVo.fail(user.getUsername() + "尚未分配角色");
+    }
+    Role role = roleRepository.selectById(userRole.getRoleId());
+    List<RolePage> listRolePage = rolePageRepository.selectList(
+        new LambdaQueryWrapper<RolePage>().eq(RolePage::getRoleId, role.getRoleId()));
+    UserPagesVo userPagesVo = new UserPagesVo();
+    userPagesVo.setId(user.getId());
+    userPagesVo.setUsername(user.getUsername());
+    userPagesVo.setRoleId(role.getRoleId());
+    userPagesVo.setRoleName(role.getRoleName());
+
+    if (listRolePage.size() != 0) {
+      List<PageInfoVo> listPageInfo = listRolePage.stream().map((rolePageItem) -> {
+        PageInfoVo pageInfoVo = new PageInfoVo();
+        Page page = pagesRepository.selectById(rolePageItem.getPageId());
+        pageInfoVo.setPageId(page.getPageId());
+        pageInfoVo.setPageName(page.getPageName());
+        pageInfoVo.setPagePath(page.getPagePath());
+        return pageInfoVo;
+      }).collect(Collectors.toList());
+      userPagesVo.setPages(listPageInfo);
+    } else {
+      userPagesVo.setPages(new ArrayList<PageInfoVo>());
+    }
+    return BaseVo.success(userPagesVo, "查询成功");
+
   }
 
   // /**

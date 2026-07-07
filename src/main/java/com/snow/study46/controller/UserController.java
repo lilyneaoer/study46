@@ -15,6 +15,7 @@ import com.google.code.kaptcha.util.Config;
 import com.snow.study46.model.dto.*;
 import com.snow.study46.model.entity.User;
 import com.snow.study46.model.vo.*;
+import com.snow.study46.service.PagesService;
 import com.snow.study46.service.UserService;
 import com.snow.study46.utils.Log;
 
@@ -44,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
   @Autowired
   DefaultKaptcha defaultKaptcha;
+  @Autowired
+  PagesService pagesService;
   @Autowired
   UserService userService;
 
@@ -96,8 +99,8 @@ public class UserController {
   }
 
   @GetMapping("/pages")
-  public String getUserPages(@RequestParam String param) {
-      return new String();
+  public BaseVo<Object> getUserPages(@RequestParam String id) {
+      return pagesService.getPagesByUserId(id);
   }
   
 

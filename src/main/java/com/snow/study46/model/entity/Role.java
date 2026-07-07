@@ -10,9 +10,7 @@ import lombok.Data;
 @TableName("role")
 public class Role {
   @TableId(type = IdType.AUTO)
-  private int pageId;
-  private String pageName;
-  private String pagePath;
-  private int parent_id;
-  private int module_id;
+  private int roleId;
+  private String roleName;
+
 }

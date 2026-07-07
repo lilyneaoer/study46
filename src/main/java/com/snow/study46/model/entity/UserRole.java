@@ -9,8 +9,10 @@ import lombok.Data;
 @Data
 @TableName("user_role")
 public class UserRole {
-  @TableId(type = IdType.AUTO)
-  private int userId;
+  @TableId
+  // 外键 → user.id (String UUID)
+  private String userId;
+  // 外键 → role.role_id (int)
   private int roleId;
   private String comment;
 }

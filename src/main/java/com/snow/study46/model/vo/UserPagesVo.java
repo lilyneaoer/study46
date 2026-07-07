@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class UserPagesVo<T> {
+public class UserPagesVo {
   private String id;
   private String username;
   private int roleId;

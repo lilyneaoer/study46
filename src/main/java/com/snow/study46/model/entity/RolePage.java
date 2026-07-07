@@ -11,6 +11,6 @@ import lombok.Data;
 public class RolePage {
   @TableId(type = IdType.AUTO)
   private int id;
-  private int role_id;
-  private int page_id;
+  private int roleId;
+  private int pageId;
 }
