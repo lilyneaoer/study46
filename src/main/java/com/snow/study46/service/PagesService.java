@@ -99,6 +99,9 @@ public class PagesService {
       return BaseVo.fail(user.getUsername() + "尚未分配角色");
     }
     Role role = roleRepository.selectById(userRole.getRoleId());
+    if (role == null) {
+      return BaseVo.fail("角色不存在");
+    }
     List<RolePage> listRolePage = rolePageRepository.selectList(
         new LambdaQueryWrapper<RolePage>().eq(RolePage::getRoleId, role.getRoleId()));
     UserPagesVo userPagesVo = new UserPagesVo();
