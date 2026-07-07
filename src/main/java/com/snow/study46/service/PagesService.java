@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,19 +16,31 @@ import com.snow.study46.model.vo.ModulesVo;
 import com.snow.study46.model.vo.PageDetailVo;
 import com.snow.study46.repository.ModulesRepository;
 import com.snow.study46.repository.PagesRepository;
+import com.snow.study46.repository.RolePageRepository;
+import com.snow.study46.repository.RoleRepository;
+import com.snow.study46.repository.UserRepository;
+import com.snow.study46.repository.UserRoleRepository;
 import com.snow.study46.utils.Log;
 
 @Service
 public class PagesService {
-  private final ModulesRepository modulesRepository;
-  private final PagesRepository pagesRepository;
 
-  public PagesService(ModulesRepository modulesRepository, PagesRepository pagesRepository) {
-    this.modulesRepository = modulesRepository;
-    this.pagesRepository = pagesRepository;
-  }
+  @Autowired
+  ModulesRepository modulesRepository;
+  @Autowired
+  PagesRepository pagesRepository;
+  @Autowired
+  RoleRepository roleRepository;
+  @Autowired
+  RolePageRepository rolePageRepository;
+  @Autowired
+  UserRepository userRepository;
+  @Autowired
+  UserRoleRepository userRoleRepository;
 
-  // @SuppressWarnings("null")
+  @Autowired
+
+  // 查询页面树
   public BaseVo<List<ModulesVo>> getListTree() {
     List<Module> moduleList = modulesRepository.selectList(null);
     List<ModulesVo> resultList = moduleList.stream().map((module) -> {
@@ -41,13 +54,14 @@ public class PagesService {
       // p.getParentId());
       queryWrapper.eq(Page::getModuleId, module.getModuleId()).isNull(Page::getParentId);
       List<Page> listPage = pagesRepository.selectList(queryWrapper);
-      modulesVo.setPage(getPage(listPage));
+      modulesVo.setPage(getChildPages(listPage));
       return modulesVo;
     }).collect(Collectors.toList());
     return BaseVo.success(resultList, "查询成功");
   }
 
-  public List<PageDetailVo> getPage(List<Page> listPage) {
+  // 查询子页面
+  public List<PageDetailVo> getChildPages(List<Page> listPage) {
     List<PageDetailVo> pageDetailVoList = new ArrayList<>();
     pageDetailVoList = listPage.stream().map((pageItem) -> {
       PageDetailVo pageDetailVo = new PageDetailVo();
@@ -59,7 +73,7 @@ public class PagesService {
       queryWrapper.eq(Page::getParentId, pageItem.getPageId());
       List<Page> childPages = pagesRepository.selectList(queryWrapper);
       if (childPages.size() != 0) {
-        pageDetailVo.setChildren(getPage(childPages));
+        pageDetailVo.setChildren(getChildPages(childPages));
       } else {
         pageDetailVo.setChildren(new ArrayList<PageDetailVo>());
       }
@@ -67,6 +81,11 @@ public class PagesService {
     }).collect(Collectors.toList());
     return pageDetailVoList;
   };
+
+  // 通过userId查询页面
+  public BaseVo<Object> getPagesByUserId(String userId) {
+    return BaseVo.success(null, "查询成功");
+  }
 
   // /**
   // * 将 Pages 实体转换为 PageDetailVo，并递归构建子节点

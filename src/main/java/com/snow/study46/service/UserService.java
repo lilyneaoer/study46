@@ -113,6 +113,7 @@ public class UserService {
     }
   }
 
+  // 登录
   public BaseVo<Optional<UserVoLogin>> login(LoginDTO form, HttpSession session) {
     String verifyCode = (String) session.getAttribute("verifyCode");
     Log.info("userService_login_verifyCode: " + verifyCode);
@@ -142,6 +143,7 @@ public class UserService {
 
   }
   
+  // 开发登录
   public BaseVo<Optional<UserVoLogin>> loginDev(RegisterDevDTO form) {
     Log.info("devLogin");
     String username = form.getUsername();
@@ -167,6 +169,7 @@ public class UserService {
     return BaseVo.success(Optional.of(userVoLogin), "登录成功");
   }
 
+  // 修改密码
   public BaseVo<Object> modifyUserPassword(ModifyPasswordDTO form) {
     User user = userRepository.selectById(form.getId());
     if (user == null) {
@@ -184,6 +187,7 @@ public class UserService {
     return BaseVo.fail("修改失败");
   }
 
+  // 删除用户
   public BaseVo<Object> removeUserById(UserIdDTO id) {
     QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
     queryWrapper.eq("id", id.getId());

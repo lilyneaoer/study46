@@ -95,6 +95,12 @@ public class UserController {
     return userService.removeUserById(id);
   }
 
+  @GetMapping("/pages")
+  public String getUserPages(@RequestParam String param) {
+      return new String();
+  }
+  
+
   @GetMapping("/getCode")
   public String getCode(HttpSession session) throws IOException {
     // 生成图片验证码
