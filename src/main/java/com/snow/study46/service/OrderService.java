@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,23 +75,24 @@ public class OrderService {
    * @param isDone
    * @return BaseVo
    */
+  @Transactional
   public BaseVo<Object> changeStatus(String orderId, boolean isDone) {
     Orders order = orderRepository.selectById(orderId);
     if (order == null) {
-      return BaseVo.fail(null, "无此订单");
+      throw new RuntimeException("无此订单: " + orderId);
     }
     order.setDoneTime(new Date());
     order.setStatus(isDone ? "FINISH" : "NOT_PAY");
     OrderVo orderVo = createOrderVo(order);
     int result = orderRepository.updateById(order);
     if (result != 1) {
-      return BaseVo.fail(orderVo, "订单状态修改失败");
+      throw new RuntimeException("订单状态修改失败");
     }
     BigDecimal amount = order.getAmount();
     UserBalance saleUserBalance = userBalanceRepository.selectById(order.getSaleId());
     UserBalance buyUserBalance = userBalanceRepository.selectById(order.getBuyId());
     if (saleUserBalance == null || buyUserBalance == null) {
-      return BaseVo.fail(orderVo, "用户不存在");
+      throw new RuntimeException("用户不存在");
     }
     if (isDone) {
       saleUserBalance.setBalance(saleUserBalance.getBalance().add(amount));
@@ -101,7 +104,7 @@ public class OrderService {
     int saleResult = userBalanceRepository.updateById(saleUserBalance);
     int buyResult = userBalanceRepository.updateById(buyUserBalance);
     if (saleResult != 1 || buyResult != 1) {
-      return BaseVo.fail(orderVo, saleResult != 1 ? "收款失败" : "付款失败");
+      throw new RuntimeException(saleResult != 1 ? "收款失败" : "付款失败");
     }
     return BaseVo.success(orderVo, "订单更新成功");
   }
