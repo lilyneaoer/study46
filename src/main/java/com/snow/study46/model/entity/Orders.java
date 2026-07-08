@@ -11,15 +11,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("Order")
-public class Order {
+@TableName("orders")
+public class Orders {
   @TableId
   private String orderId;
   private String buyId;
-  private String SaleId;
+  private String saleId;
   private BigDecimal amount;
   private String status;
   @TableField(fill = FieldFill.DEFAULT)
   private Date createTime;
+  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
   private Date doneTime;
 }
