@@ -80,6 +80,7 @@ public class PagesService {
       pageDetailVo.setPageName(pageItem.getPageName());
       pageDetailVo.setPagePath(pageItem.getPagePath());
       LambdaQueryWrapper<Page> queryWrapper = new LambdaQueryWrapper<>();
+      if (pageItem.getPageId() != 0)
       queryWrapper.eq(Page::getParentId, pageItem.getPageId());
       List<Page> childPages = pagesRepository.selectList(queryWrapper);
       if (childPages.size() != 0) {
@@ -158,6 +159,7 @@ public class PagesService {
             parent.setChildren(new ArrayList<>());
           }
           parent.getChildren().add(pageItem);
+          pageItem.setChildren(new ArrayList<>());
         }
       }
     });
