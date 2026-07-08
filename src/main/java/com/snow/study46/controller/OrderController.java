@@ -32,7 +32,11 @@ public class OrderController {
   // 修改状态
   @PostMapping("/changeStatus")
   public BaseVo<Object> changeStatus(@RequestBody ChangeOrderDTO changeOrderDTO) {
-    return orderService.changeStatus(changeOrderDTO.getOrderId(), changeOrderDTO.isDone());
+    try {
+      return orderService.changeStatus(changeOrderDTO.getOrderId(), changeOrderDTO.isDone());
+    } catch (RuntimeException err) {
+      return BaseVo.fail(err.getMessage());
+    }
   }
 
   // 删除

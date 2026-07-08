@@ -68,15 +68,9 @@ public class OrderService {
     return BaseVo.fail(null, "购买失败");
   }
 
-  /**
-   * 修改订单状态
-   * 
-   * @param orderId
-   * @param isDone
-   * @return BaseVo
-   */
-  @Transactional
-  public BaseVo<Object> changeStatus(String orderId, boolean isDone) {
+  // 修改订单状态
+  @Transactional // 事务处理
+  public BaseVo<Object> changeStatus(String orderId, boolean isDone) throws RuntimeException {
     Orders order = orderRepository.selectById(orderId);
     if (order == null) {
       throw new RuntimeException("无此订单: " + orderId);
@@ -94,13 +88,10 @@ public class OrderService {
     if (saleUserBalance == null || buyUserBalance == null) {
       throw new RuntimeException("用户不存在");
     }
-    if (isDone) {
-      saleUserBalance.setBalance(saleUserBalance.getBalance().add(amount));
-      buyUserBalance.setBalance(buyUserBalance.getBalance().subtract(amount));
-    } else {
-      saleUserBalance.setBalance(saleUserBalance.getBalance().subtract(amount));
-      buyUserBalance.setBalance(buyUserBalance.getBalance().add(amount));
-    }
+    // 计算帐户余额
+    BigDecimal signedAmount = isDone ? amount : amount.negate();
+    saleUserBalance.setBalance(saleUserBalance.getBalance().add(signedAmount));
+    buyUserBalance.setBalance(buyUserBalance.getBalance().subtract(signedAmount));
     int saleResult = userBalanceRepository.updateById(saleUserBalance);
     int buyResult = userBalanceRepository.updateById(buyUserBalance);
     if (saleResult != 1 || buyResult != 1) {
