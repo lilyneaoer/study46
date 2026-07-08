@@ -1,26 +1,24 @@
 package com.snow.study46.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snow.study46.model.dto.CreateOrderDTO;
 import com.snow.study46.model.entity.Orders;
 import com.snow.study46.model.entity.User;
+import com.snow.study46.model.entity.UserBalance;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.OrderListVo;
 import com.snow.study46.model.vo.OrderVo;
-import com.snow.study46.model.vo.PageInfoVo;
 import com.snow.study46.repository.OrderRepository;
+import com.snow.study46.repository.UserBalanceRepository;
 import com.snow.study46.repository.UserRepository;
 import com.snow.study46.utils.Log;
 
@@ -28,6 +26,8 @@ import com.snow.study46.utils.Log;
 public class OrderService {
   @Autowired
   OrderRepository orderRepository;
+  @Autowired
+  UserBalanceRepository userBalanceRepository;
   @Autowired
   UserRepository userRepository;
 
@@ -63,23 +63,61 @@ public class OrderService {
       OrderVo orderVo = createOrderVo(order);
       return BaseVo.success(orderVo, "购买成功");
     }
-    return BaseVo.success(null, "购买失败");
+    return BaseVo.fail(null, "购买失败");
   }
 
-  // 修改状态
+  /**
+   * 修改订单状态
+   * 
+   * @param orderId
+   * @param isDone
+   * @return BaseVo
+   */
   public BaseVo<Object> changeStatus(String orderId, boolean isDone) {
     Orders order = orderRepository.selectById(orderId);
+    if (order == null) {
+      return BaseVo.fail(null, "无此订单");
+    }
+    order.setDoneTime(new Date());
+    order.setStatus(isDone ? "FINISH" : "NOT_PAY");
+    OrderVo orderVo = createOrderVo(order);
+    int result = orderRepository.updateById(order);
+    if (result != 1) {
+      return BaseVo.fail(orderVo, "订单状态修改失败");
+    }
+    BigDecimal amount = order.getAmount();
+    UserBalance saleUserBalance = userBalanceRepository.selectById(order.getSaleId());
+    UserBalance buyUserBalance = userBalanceRepository.selectById(order.getBuyId());
+    if (saleUserBalance == null || buyUserBalance == null) {
+      return BaseVo.fail(orderVo, "用户不存在");
+    }
+    if (isDone) {
+      saleUserBalance.setBalance(saleUserBalance.getBalance().add(amount));
+      buyUserBalance.setBalance(buyUserBalance.getBalance().subtract(amount));
+    } else {
+      saleUserBalance.setBalance(saleUserBalance.getBalance().subtract(amount));
+      buyUserBalance.setBalance(buyUserBalance.getBalance().add(amount));
+    }
+    int saleResult = userBalanceRepository.updateById(saleUserBalance);
+    int buyResult = userBalanceRepository.updateById(buyUserBalance);
+    if (saleResult != 1 || buyResult != 1) {
+      return BaseVo.fail(orderVo, saleResult != 1 ? "收款失败" : "付款失败");
+    }
+    return BaseVo.success(orderVo, "订单更新成功");
+  }
+
+  // 删除
+  public BaseVo<Object> remove(String id) {
+    Orders order = orderRepository.selectById(id);
     if (order != null) {
-      order.setStatus(isDone ? "PAY" : "NOT_PAY");
-      int result = orderRepository.updateById(order);
+      int result = orderRepository.deleteById(id);
       if (result == 1) {
-        OrderVo orderVo = createOrderVo(orderRepository.selectById(orderId));
-        return BaseVo.success(orderVo, "订单状态修改成功");
+        return BaseVo.success("订单" + id + "删除成功");
       } else {
-        return BaseVo.fail(null, "订单状态修改失败");
+        return BaseVo.fail("订单" + order.getOrderId() + "删除失败");
       }
     }
-    return BaseVo.fail(null, "无此用户");
+    return BaseVo.fail("无此订单");
   }
 
   private OrderVo createOrderVo(Orders order) {
@@ -89,6 +127,7 @@ public class OrderService {
     orderVo.setOrderId(order.getOrderId());
     orderVo.setAmount(order.getAmount());
     orderVo.setCreateTime(order.getCreateTime());
+    orderVo.setDoneTime(order.getDoneTime());
     orderVo.setStatus(order.getStatus());
     return orderVo;
   }

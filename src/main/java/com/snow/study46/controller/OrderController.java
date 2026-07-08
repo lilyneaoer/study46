@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.snow.study46.model.dto.ChangeOrderDTO;
 import com.snow.study46.model.dto.CreateOrderDTO;
+import com.snow.study46.model.dto.OrderIdDTO;
 import com.snow.study46.model.vo.BaseVo;
 import com.snow.study46.model.vo.OrderListVo;
 import com.snow.study46.service.OrderService;
@@ -32,6 +33,12 @@ public class OrderController {
   @PostMapping("/changeStatus")
   public BaseVo<Object> changeStatus(@RequestBody ChangeOrderDTO changeOrderDTO) {
     return orderService.changeStatus(changeOrderDTO.getOrderId(), changeOrderDTO.isDone());
+  }
+
+  // 删除
+  @PostMapping("/remove")
+  public BaseVo<Object> postMethodName(@RequestBody OrderIdDTO removeOrderDTO) {
+    return orderService.remove(removeOrderDTO.getId());
   }
 
   // 列表

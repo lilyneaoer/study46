@@ -21,6 +21,5 @@ public class Orders {
   private String status;
   @TableField(fill = FieldFill.DEFAULT)
   private Date createTime;
-  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
   private Date doneTime;
 }
